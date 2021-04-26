@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>TAS-Editor</title>
+    <link rel="stylesheet" href="index.css">
+  </head>
+  <body>
+    <style>
+      .titlebar{
+        color: rgb(0, 0, 0);
+        justify-items: center;
+        -webkit-app-region: drag;
+        text-align: center;
+        height: 30px;
+        background-color: rgb(216, 216, 216);
+      }
+    </style>
+    <div class="titlebar">
+      <div style="position: absolute; top: 4px;padding-left: 45%;">TAS-Editor</div><button class="minimizebtn" onclick="miniact()">-</button><button class="maximbtn" onclick="maximact()">+</button><button class="closebtn" onclick="closeaction()">&times;</button>
+    </div>
+    <div class="mainbody">
+      <div class="menu" onclick="openmenu()" style="width: 30px;">
+        <div class="m"></div>
+        <div class="m"></div>
+        <div class="m"></div>
+        <div id="menu"></div>
+      </div>
+      <textarea id="text" name="txxxt" class="txt"  placeholder="write anything" style="width: 98%;height: 450px;margin-top: 5px; margin-right: 5px;resize: vertical;max-height: 500px;"></textarea>
+      <div id="terminal"></div>
+    </div>
+
+
+
+
+
+    <script>
+
+      const {ipcRenderer} = require("electron")
+      const closeaction = ()=>{
+        ipcRenderer.send("close","close")
+       
+      }
+      const miniact = ()=>{
+        ipcRenderer.send("min","min")
+       
+      }
+      const maximact = ()=>{
+        ipcRenderer.send("max","min")
+       
+      }
+      const openmenu = () =>{
+        var top = document.getElementById("menu").offsetTop
+        ipcRenderer.send("opm",top)
+      }
+      ipcRenderer.on("fileopened",(event,data)=>{
+        document.getElementById("text").value = data
+      })
+      ipcRenderer.on("wrreq",(event,data)=>{
+        var txt = document.getElementsByClassName("txt")[0].value
+        console.log(txt)
+        ipcRenderer.send("txtoftxtarea",txt)
+      })
+      ipcRenderer.on("givemedata",(event,data)=>{
+        let txt = document.getElementsByClassName("txt")[0].value
+        console.log(txt)
+        ipcRenderer.send("txtoftxtarea2",txt)
+      })
+
+    </script>
+
+  </body>
+</html>
